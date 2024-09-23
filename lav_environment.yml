@@ -172,8 +172,6 @@ dependencies:
       - sympy==1.10.1
       - tabulate==0.9.0
       - tifffile==2021.11.2
-      - torch==1.13.1+cu117
-      - torch-scatter==2.1.1+pt113cu117
       - tqdm==4.66.5
       - typing-extensions==4.7.1
       - urllib3==2.0.7
@@ -182,3 +180,4 @@ dependencies:
       - xmlschema==2.5.1
       - yarl==1.9.4
       - zipp==3.15.0
+prefix: ./envs/
