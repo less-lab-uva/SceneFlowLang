@@ -163,4 +163,5 @@ cython_debug/
 
 # Custom
 .tsg
-./study_data/
+study_data/
+results/
