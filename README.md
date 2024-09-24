@@ -2,6 +2,8 @@
 
 This repository contains the paper and the code of "Scene Flow Specifications: Encoding and Monitoring Rich Temporal Safety Properties of Autonomous Systems". The code is written in Python and requires [conda](https://docs.anaconda.com/free/anaconda/install/linux/) and [7z](https://www.7-zip.org/download.html) to be installed. The code was tested using Ubuntu 20.04.
 
+- [Installation](#installation)
+- [Replication](#replication)
 
 ## Example violations
 Below are three example violations from the `HazardAtSideLaneTwoWays` scenarios that were automatically identified by the technique.
@@ -24,6 +26,8 @@ These violations were identified by increasing the required safety buffer.
 ![Vehicle comes too close to a bike while passing. Bike 2](./videos/476.gif)
 
 ## Installation
+This has been tested on a Ubuntu 20.04.
+
 To install everything needed to run the code, execute the following command:
 ```bash
 ./unpack_data.sh
@@ -33,11 +37,16 @@ The installation script will do the following:
 2) Create the conda environments as needed.
 3) Install [mona](https://www.brics.dk/mona/) using the `install_mona.sh` script
 
-## Usage
+## Replication
 To reproduce the results of the paper, execute the following command:
 ```bash
 ./run.sh
 ```
+This will run for ~6 hours. If you are running on a machine with at least 10 cores, you can substantially reduce this time by using the multithreaded version below.
+```bash
+./run_threaded.sh
+```
+
 This script will do the following:
 1) Activate the conda environments as needed.
 2) Unpack the scene graphs used in the experiment for RQ2 and RQ3.
