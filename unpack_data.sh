@@ -6,4 +6,5 @@ else
   printf "Also creating conda environments.\n"
   conda env create -f tcp_environment.yml
   conda env create -f lav_environment.yml
+  source install_mona.sh
 fi
