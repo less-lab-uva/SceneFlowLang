@@ -48,7 +48,6 @@ def check_directory_single_thread(dir_to_check, save_folder, threaded=False):
     ego_logs = None
     if ego_logs_path.exists():
         ego_logs = json.loads(ego_logs_path.read_text())['records']
-        print("I got it!")
     for sg_name in tqdm(sg_name_list, disable=threaded):
         sg = utils.load_sg(str(rsv_folder / sg_name))
         sg.graph['name'] = sg_name

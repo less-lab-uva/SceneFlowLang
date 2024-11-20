@@ -40,11 +40,11 @@ The installation script will do the following:
 ## Replication
 To reproduce the results of the paper, execute the following command:
 ```bash
-./run.sh
+source run.sh
 ```
 This will run for ~6 hours. If you are running on a machine with at least 10 cores, you can substantially reduce this time by using the multithreaded version below.
 ```bash
-./run_threaded.sh
+source run_threaded.sh
 ```
 
 This script will do the following:
