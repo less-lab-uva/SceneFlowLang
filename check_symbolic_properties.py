@@ -30,17 +30,12 @@ def natural_keys(text):
                                       text)]
 
 
-def check_directory_single_thread(dir_to_check, save_folder, threaded=False):
+def check_directory_single_thread(dir_to_check, save_folder, threaded=False, ego_only=False, phi=-1, run=0):
     m = SymbolicMonitor(log_path=save_folder, route_path=dir_to_check.name)
+    m.initialize(m.log_path, m.route_path, ego_only=ego_only, phi=phi)
     rsv_folder = dir_to_check/'rsv'
     sg_name_list = [p for p in os.listdir(rsv_folder) if p.endswith(".pkl")]
     sg_name_list = sorted(sg_name_list, key=natural_keys)
-    # # Get 1 sg every 10 frames (2Hz)
-    # if sut == 'InterFuser' or sut == 'TCP':
-    #     if sut == 'TCP' and dir_to_check.name == 'done_RouteScenario_24':
-    #         pass
-    #     else:
-    #         sg_name_list = [p for i, p in enumerate(sg_name_list) if i % 10 == 0]
     print(f"{str(dir_to_check)}: Checking {len(sg_name_list)} files")
     start = time.time()
     sgs = []
@@ -62,9 +57,23 @@ def check_directory_single_thread(dir_to_check, save_folder, threaded=False):
     print(f"Took {load_sg_end - start:.2f} seconds to load SGs")
     utils.add_missing(sgs)
     print(f"Took {time.time() - load_sg_end:.2f} seconds to add missing SGs")
+    frame_times = []
     for sg in tqdm(sgs, disable=threaded):
+        ns_start = time.time_ns()
         m.check(sg, save_usage_information=True)
-        # m.save_all_relevant_subgraphs(sg, sg_name.replace('.pkl', ''))
+        total_time = time.time_ns() - ns_start
+        frame_times.append(total_time)
+    data = {
+        "folder": dir_to_check.name,
+        "ego_only": ego_only,
+        "phi": phi,
+        "run": run,
+        "frame_times": frame_times
+    }
+    ego_only_str = 'ego' if ego_only else 'all'
+    frame_time_file = save_folder / f'{dir_to_check.name}_frame_times_{ego_only_str}_phi_{phi}_run_{run}.json'
+    with open(frame_time_file, 'w') as f:
+        json.dump(data, f)
     m.save_final_output()
     end = time.time()
     print(f"{str(dir_to_check)} | Checked {len(sg_name_list)} SGs | Total time taken: {end - start:.2f} seconds | Average time per SG: {(end - start) / len(sg_name_list):.2f} seconds")
@@ -90,6 +99,9 @@ def main():
     parser.add_argument('-s', '--save_folder', type=Path, default='default/')
     parser.add_argument('-t', '--threaded', action='store_true')
     parser.add_argument('--n_threads', type=int, default=8)
+    parser.add_argument('--ego_only', action='store_true')
+    parser.add_argument('--phi', type=int, default=-1)
+    parser.add_argument('--run', type=int, default=0)
     parser.add_argument('--no_iter', action='store_true')
     args = parser.parse_args()
 
@@ -128,10 +140,16 @@ def main():
                 r.wait()
     else:
         if args.no_iter:
-            check_directory_single_thread(args.folder_to_check, args.save_folder, False)
+            check_directory_single_thread(args.folder_to_check, args.save_folder, False,
+                                              ego_only=args.ego_only,
+                                              phi=args.phi,
+                                              run=args.run)
         else:
             for d in sorted(dirs):
-                check_directory_single_thread(d, args.save_folder, False)
+                check_directory_single_thread(d, args.save_folder, False,
+                                              ego_only=args.ego_only,
+                                              phi=args.phi,
+                                              run=args.run)
 
 
 if __name__ == "__main__":

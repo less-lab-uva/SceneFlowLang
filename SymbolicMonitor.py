@@ -9,6 +9,7 @@ import SG_Utils as utils
 import Property
 from SymbolicEntity import SymbolicEntity, ConcreteEntity
 from SymbolicProperty import ConcreteProperty, SymbolicProperty, UnboundEntityError
+from symbolic_properties_ego_only import all_symbolic_properties as ego_all_symbolic_properties
 from symbolic_properties import all_symbolic_properties
 from time import time
 from PIL import Image
@@ -57,8 +58,11 @@ class SymbolicMonitor:
             cls.monitor_instance.initialize(*args, **kwargs)
         return cls.monitor_instance
 
-    def initialize(self, log_path, route_path):
-        self.symbolic_properties: List[SymbolicProperty] = all_symbolic_properties
+    def initialize(self, log_path, route_path, ego_only=False, phi=-1):
+        properties = ego_all_symbolic_properties if ego_only else all_symbolic_properties
+        if phi >= 0:  # if phi >=0, it is an index
+            properties = [properties[phi]]
+        self.symbolic_properties: List[SymbolicProperty] = properties
         self.concrete_properties: List[ConcreteProperty] = []
         self.previous_concrete = []
         self.timestep = 0
