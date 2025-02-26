@@ -8,3 +8,9 @@ else
   conda env create -f lav_environment.yml
   source install_mona.sh
 fi
+if test -d "./study_timing_data/" ; then
+  printf "Timing data has already been unpacked to ./study_timing_data/, skipping.\n"
+else
+  printf "Unpacking study_timing_data.7z to ./study_timing_data/. Will result in ~110MB.\n"
+  7z x study_timing_data.7z -o./
+fi

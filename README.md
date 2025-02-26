@@ -33,7 +33,7 @@ To install everything needed to run the code, execute the following command:
 ./unpack_data.sh
 ```
 The installation script will do the following:
-1) Unpack the included study data from `study_data.7z`
+1) Unpack the included study data from `study_data.7z` and `study_timing_data.sh`
 2) Create the conda environments as needed.
 3) Install [mona](https://www.brics.dk/mona/) using the `install_mona.sh` script
 
@@ -52,3 +52,18 @@ This script will do the following:
 2) Unpack the scene graphs used in the experiment for RQ2 and RQ3.
 3) Check the properties specified in the paper, located in the `symbolic_properties.py` file, using the scene graphs and the monitor instantiation. The violations will appear in `./results/`
 4) Generate tables that show the property violations for each RQ.
+
+
+### Replicating the timing figures (Fig. 7)
+The times taken to evaluate each from of the SG as described in RQ4 are stored in `./study_timing_data/`. 
+To reproduce Fig. 7, and the equivalent version including monitoring for all vehicles, run:
+```bash
+conda activate tcp_env
+python3 time_parser.py
+```
+
+This will create:
+* `frame_time_hist_ego_only.pdf` (Fig. 7)
+* `frame_time_hist_all.pdf` (Equivalent to Fig. 7, but with comparing properties checking all vehicles and only ego)
+
+Both of these files have been included in the repo.
